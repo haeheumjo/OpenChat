@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "317127504858",
+    "firebase_url": "https://openchat-14610.firebaseio.com",
+    "project_id": "openchat-14610",
+    "storage_bucket": "openchat-14610.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317127504858:android:e5969c3ea209274f",
+        "android_client_info": {
+          "package_name": "team1.mobileapp.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317127504858-md8k3c6b242q5tsc3jnp8gfm1nn4gq6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "team1.mobileapp.com",
+            "certificate_hash": "bffdb71a7918b832397391cb471962ed79f8ddb8"
+          }
+        },
+        {
+          "client_id": "317127504858-es1euoln0erqor7dnrc643cst6qd8n1h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpqekqTfHcLg88Ir02xg7SzUFdHaz9K2c"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317127504858-es1euoln0erqor7dnrc643cst6qd8n1h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
