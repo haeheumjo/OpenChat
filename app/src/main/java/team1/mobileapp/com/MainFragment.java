@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class MainFragment extends Fragment {
     private static final String ARG_PAGE = "page";
 
-    Bundle bundle = new Bundle();
-    
     private int page;
 
     public MainFragment() {
@@ -26,39 +25,40 @@ public class MainFragment extends Fragment {
 
     public static MainFragment newInstance(int page, Bundle bundle) {
         MainFragment fragment = new MainFragment();
-        bundle.putInt(ARG_PAGE, page);
-        bundle.putAll(bundle);
-        fragment.setArguments(bundle);
+        Bundle args = new Bundle();
+        args.putAll(bundle);
+        args.putInt(ARG_PAGE, page);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        RecyclerView recyclerViewMain = view.findViewById(R.id.recyclerViewMain);
-        Button buttonBottom = view.findViewById(R.id.buttonBottom);
+        RecyclerView recyclerViewMain = rootView.findViewById(R.id.recyclerViewMain);
+        Button buttonBottom = rootView.findViewById(R.id.buttonBottom);
 
-        page = getArguments().getInt(ARG_PAGE);
+        int page = getArguments().getInt(ARG_PAGE);
         if(page==1){//내채팅방목록
-            buttonBottom.setText("오픈채팅 만들기");
+            buttonBottom.setText("채팅방 만들기");
             buttonBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    directCreateActivity(bundle);
+                    directCreateActivity(getArguments());
                 }
             });
         }else{//채팅방둘러보기
-            buttonBottom.setText("채팅방 검색하기");
+            buttonBottom.setText("채팅방 둘러보기");
             buttonBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    directSearchActivity(bundle);
+                    directSearchActivity(getArguments());
                 }
             });
         }
-        return view;
+        return rootView;
     }
 
     private void directCreateActivity(Bundle bundle) {
