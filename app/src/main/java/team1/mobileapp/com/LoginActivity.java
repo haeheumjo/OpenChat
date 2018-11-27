@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
 public class LoginActivity extends AppCompatActivity {
@@ -47,10 +48,12 @@ public class LoginActivity extends AppCompatActivity {
 
     Bundle bundle = new Bundle();
 
+    private String name;
     private String studentNumber;
     private int gender;
     private int age;
     private int birthYear;
+    private String department;
 
     private KnuLoginTask KnuLoginTask = null;
 
@@ -82,6 +85,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        progressBarLogin = findViewById(R.id.progressBarLogin);
+
         Button buttonVerify = findViewById(R.id.buttonVerify);
         buttonVerify.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
 
         SharedPreferences sharedPref = getSharedPreferences("USER_ACCOUNT", MODE_PRIVATE);
         String mKey = sharedPref.getString("MY_KEY", "");
-        if(!mKey.equals("")){
+        if (!mKey.equals("")) {
             AutoLogin(mKey);
         }
     }
@@ -110,11 +115,11 @@ public class LoginActivity extends AppCompatActivity {
         View focusView = null;
 
         if (TextUtils.isEmpty(mID)) {
-            Toast.makeText(getApplicationContext(),getString(R.string.login_fail_empty_id),Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.login_fail_empty_id), Toast.LENGTH_LONG).show();
             focusView = editTextId;
             cancel = true;
         } else if (TextUtils.isEmpty(mPW)) {
-            Toast.makeText(getApplicationContext(),getString(R.string.login_fail_empty_pw),Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.login_fail_empty_pw), Toast.LENGTH_LONG).show();
             focusView = editTextPw;
             cancel = true;
         }
@@ -131,30 +136,30 @@ public class LoginActivity extends AppCompatActivity {
 
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        editTextId.setVisibility(show ? GONE : VISIBLE);
+        editTextId.setVisibility(show ? INVISIBLE : VISIBLE);
         editTextId.animate().setDuration(shortAnimTime).alpha(
                 show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                editTextId.setVisibility(show ? GONE : VISIBLE);
+                editTextId.setVisibility(show ? INVISIBLE : VISIBLE);
             }
         });
 
-        editTextPw.setVisibility(show ? GONE : VISIBLE);
+        editTextPw.setVisibility(show ? INVISIBLE : VISIBLE);
         editTextPw.animate().setDuration(shortAnimTime).alpha(
                 show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                editTextPw.setVisibility(show ? GONE : VISIBLE);
+                editTextPw.setVisibility(show ? INVISIBLE : VISIBLE);
             }
         });
 
-        progressBarLogin.setVisibility(show ? VISIBLE : GONE);
+        progressBarLogin.setVisibility(show ? VISIBLE : INVISIBLE);
         progressBarLogin.animate().setDuration(shortAnimTime).alpha(
                 show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                progressBarLogin.setVisibility(show ? VISIBLE : GONE);
+                progressBarLogin.setVisibility(show ? VISIBLE : INVISIBLE);
             }
         });
     }
@@ -206,20 +211,20 @@ public class LoginActivity extends AppCompatActivity {
                     Element stu_nbr = document.getElementById("stu_nbr");
                     studentNumber = stu_nbr.attr("value");
                     Element kor_nm = document.getElementById("kor_nm");
-//                    name = kor_nm.attr("value");
+                    name = kor_nm.attr("value");
                     Element descern_nbr1 = document.getElementById("descern_nbr1");
                     String social_front = descern_nbr1.attr("value");
                     Element descern_nbr2 = document.getElementById("descern_nbr2");
                     String social_back = descern_nbr2.attr("value");
-//                    department = document.getElementById("basisMngtTablet").select("td").get(6).text();
+                    department = document.getElementById("basisMngtTablet").select("td").get(6).text();
                     birthYear = Integer.parseInt(social_front.substring(0, 2));
-                    gender = (Character.getNumericValue(social_back.charAt(0))) % 2 == 0 ? 2: 1;
+                    gender = (Character.getNumericValue(social_back.charAt(0))) % 2 == 0 ? 2 : 1;
 
-//                    bundle.putString("my_name", name);
+                    bundle.putString("my_name", name);
                     bundle.putInt("my_gender", gender);
                     bundle.putInt("my_birthYear", birthYear);
                     bundle.putString("my_key", studentNumber);
-//                    bundle.putString("my_department", department);
+                    bundle.putString("my_department", department);
 
                     System.out.println("bundle : " + bundle);
 
@@ -235,31 +240,27 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Integer result) {
-            if (result==0) {//로그인 실패
+            if (result == 0) {//로그인 실패
                 showProgress(false);
-                Toast.makeText(getApplicationContext(),getString(R.string.login_fail),Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.login_fail), Toast.LENGTH_LONG).show();
                 editTextPw.requestFocus();
-            } else if(result==1) {//비밀번호 변경
+            } else if (result == 1) {//비밀번호 변경
                 showProgress(false);
-                Toast.makeText(getApplicationContext(),getString(R.string.login_require_change_pw),Toast.LENGTH_LONG).show();
-            }else{//로그인 성공
+                Toast.makeText(getApplicationContext(), getString(R.string.login_require_change_pw), Toast.LENGTH_LONG).show();
+            } else {//로그인 성공
                 mDatabaseReference.child("users").child(studentNumber).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.exists()) {//신규
-                            showProgress(false);
-                            directSignInActivity();
-                        } else {//기존
-
-                                SharedPreferences sharedPref = getSharedPreferences("USER_ACCOUNT", MODE_PRIVATE);
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putString("MY_KEY", studentNumber);
-                                editor.apply();
-
-                                showProgress(false);
-
-                                directMainActivity();
+                        if(!dataSnapshot.exists()) {//신규
+                            mDatabaseReference.child("users").child(studentNumber).setValue(new User(name,gender,birthYear,department,studentNumber));
                         }
+                        SharedPreferences sharedPref = getSharedPreferences("USER_ACCOUNT", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                        editor.putString("MY_KEY", studentNumber);
+                        editor.apply();
+
+                        showProgress(false);
+                        directMainActivity();
                     }
 
                     @Override
@@ -276,22 +277,26 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void AutoLogin(final String mKey){
+    private void AutoLogin(final String mKey) {
         showProgress(true);
         mDatabaseReference.child("users").child(mKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
 
-                        int gender = Integer.parseInt(dataSnapshot.child("gender").getValue().toString());
-                        int birthYear = Integer.parseInt(dataSnapshot.child("birthYear").getValue().toString());
+                    name = dataSnapshot.child("name").getValue().toString();
+                    gender = Integer.parseInt(dataSnapshot.child("gender").getValue().toString());
+                    birthYear = Integer.parseInt(dataSnapshot.child("birthYear").getValue().toString());
+                    department = dataSnapshot.child("department").getValue().toString();
 
-                        bundle.putString("my_key", mKey);
-                        bundle.putInt("my_gender", gender);
-                        bundle.putInt("my_birthYear", birthYear);
+                    bundle.putString("my_name", name);
+                    bundle.putInt("my_gender", gender);
+                    bundle.putInt("my_birthYear", birthYear);
+                    bundle.putString("my_key", mKey);
+                    bundle.putString("my_department", department);
 
-                        directMainActivity();
-                }else{
+                    directMainActivity();
+                } else {
                     SharedPreferences sharedPref = getSharedPreferences("USER_ACCOUNT", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.clear();
@@ -314,6 +319,7 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     private void directMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtras(bundle);

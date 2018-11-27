@@ -3,7 +3,7 @@
     <!--LoginActivity-->
     <string name="id">아이디</string>
     <string name="password">비밀번호</string>
-    <string name="verify_info">통합정보시스템 계정으로 경대생 인증 후 이용가능합니다</string>
+    <string name="verify_info">통합정보시스템 계정으로 경대생 인증 후 이용 가능합니다</string>
     <string name="verify">인증</string>
     <string name="login_fail">로그인 실패</string>
     <string name="login_fail_empty_id">아이디를 입력하세요</string>
@@ -15,4 +15,7 @@
     <string name="user_profile_image_back">프로필사진이 선택되지 않았습니다.</string>
     <!--MainActivity-->
     <string name="open_chat_create">오픈채팅 만들기</string>
+    <string name="tab_my_chat_rooms">내채팅방</string>
+    <string name="tab_other_chat_rooms">둘러보기</string>
+
 </resources>
