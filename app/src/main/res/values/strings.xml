@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OpenChat</string>
+    <string name="app_name">크누챗</string>
     <!--LoginActivity-->
     <string name="id">아이디</string>
     <string name="password">비밀번호</string>
@@ -12,10 +12,39 @@
 
     <!--SignInActivity-->
     <string name="user_profile_image_pick">프로필사진을 정해주세요.</string>
-    <string name="user_profile_image_back">프로필사진이 선택되지 않았습니다.</string>
+    <string name="user_profile_image_null">프로필사진이 선택되지 않았습니다.</string>
     <!--MainActivity-->
-    <string name="open_chat_create">오픈채팅 만들기</string>
-    <string name="tab_my_chat_rooms">내채팅방</string>
+    <string name="open_chat_create">방 만들기</string>
+    <string name="open_chat_search">방 검색하기</string>
+    <string name="tab_my_chat_rooms">내 채팅방</string>
     <string name="tab_other_chat_rooms">둘러보기</string>
+    <string name="no_data_available"> 보여줄 방이 없어요!</string>no_data_available
+    <!--CreateActivity-->
+    <string name="profile_image_set">채팅방 배경사진을 등록해주세요</string>
+    <string name="user_permission_failed">권한 획득 실패</string>
+    <string name="user_permission_failed_message">권한 없이는 어플을 사용할 수 없습니다.</string>
+    <string name="user_permission_allow">허용</string>
+    <string name="user_permission_deny">거부(종료)</string>
+    <string name="user_profile_image_back">프로필사진이 선택되지 않았습니다.</string>
 
+    <string name="open_chat_name">채팅방 이름</string>
+    <string name="open_chat_description">채팅방 소개</string>
+    <string name="open_information">공개정보</string>
+    <string name="max">최대인원</string>
+    <string name="name">이름</string>
+    <string name="age">나이</string>
+    <string name="sex">성별</string>
+    <string name="student_number">학번</string>
+    <string name="department">학부</string>
+    <string name="create">만들기</string>
+    <string name="create_fail_empty_name">채팅방 이름을 적어주세요.</string>
+    <string name="create_fail_empty_description">채팅방 소개를 적어주세요.</string>
+    <string name="return_to_main">메인화면으로</string>
+    <string name="return_to_main_message">작성 중인 정보는 지워집니다.</string>
+    <!--Common-->
+    <string name="yes">예</string>
+    <string name="no">아니오</string>
+    <string name="confirm">확인</string>
+    <string name="cancel">취소</string>
 </resources>
+

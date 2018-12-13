@@ -3,4 +3,10 @@
     <color name="colorPrimary">#EA6A59</color>
     <color name="colorPrimaryDark">#747474</color>
     <color name="colorAccent">#DA2127</color>
+    <color name="background_light">#F2F2F2</color>
+    <color name="background_dark">#808080</color>
+    <color name="white">#FAFAFA</color>
+    <color name="black">#000000</color>
+    <color name="knu_red">#D80C18</color>
+    <color name="knu_purple">#BAB3D1</color>
 </resources>

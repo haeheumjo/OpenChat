@@ -33,7 +33,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.view.View.GONE;
+import team1.mobileapp.com.model.User;
+
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 

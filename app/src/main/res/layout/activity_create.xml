@@ -1,9 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_light"
+    android:fillViewport="true"
     tools:context=".CreateActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/imageViewProfile"
+        android:layout_width="0dp"
+        android:layout_height="186dp"
+        android:scaleType="centerInside"
+        android:padding="24dp"
+        android:src="@drawable/img_default_profile_room"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/knu_purple"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextName"
+        app:layout_constraintEnd_toEndOf="@+id/viewDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextName" />
+
+    <EditText
+        android:id="@+id/editTextName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:maxLines="1"
+        android:maxLength="20"
+        android:hint="@string/open_chat_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/viewName"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewProfile" />
+
+    <View
+        android:id="@+id/viewDescription"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/knu_purple"
+        app:layout_constraintBottom_toBottomOf="@+id/editTextDescription"
+        app:layout_constraintEnd_toEndOf="@+id/textViewOpenOptions"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editTextDescription" />
+
+    <EditText
+        android:id="@+id/editTextDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/open_chat_description"
+        android:maxLines="12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/viewDescription"
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+
+        <TextView
+            android:id="@+id/textViewMax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/max"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextDescription" />
+
+        <TextView
+            android:id="@+id/textViewMaxCount"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="10"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewMax" />
+
+        <TextView
+            android:id="@+id/textViewOpenOptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/open_information"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewMaxCount" />
+
+        <CheckBox
+            android:id="@+id/checkBoxName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/white"
+            android:paddingStart="24dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="4dp"
+            android:text="@string/name"
+            app:layout_constraintBottom_toTopOf="@+id/checkBoxAge"
+            app:layout_constraintEnd_toStartOf="@+id/checkBoxStudentNumber"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewOpenOptions"
+            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+    <CheckBox
+        android:id="@+id/checkBoxAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:paddingStart="24dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="4dp"
+        android:text="@string/age"
+        app:layout_constraintBottom_toTopOf="@+id/checkBoxSex"
+        app:layout_constraintStart_toStartOf="@+id/checkBoxName"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxName" />
+
+        <CheckBox
+            android:id="@+id/checkBoxSex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/white"
+            android:paddingStart="24dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="4dp"
+            android:text="@string/sex"
+            app:layout_constraintBottom_toTopOf="@+id/buttonCreate"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxAge"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxAge" />
+
+        <CheckBox
+            android:id="@+id/checkBoxStudentNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/white"
+            android:paddingStart="24dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="4dp"
+            android:text="@string/student_number"
+            app:layout_constraintBottom_toTopOf="@+id/checkBoxDepartment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxName"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxName"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+    <CheckBox
+        android:id="@+id/checkBoxDepartment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white"
+        android:paddingStart="24dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="4dp"
+        android:text="@string/department"
+        app:layout_constraintBottom_toBottomOf="@+id/checkBoxSex"
+        app:layout_constraintStart_toStartOf="@+id/checkBoxStudentNumber"
+        app:layout_constraintTop_toBottomOf="@+id/checkBoxStudentNumber" />
+
+    <Button
+        android:id="@+id/buttonCreate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:elevation="4dp"
+        android:text="@string/create"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/imageButtonDecrease"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewMaxCount"
+        app:layout_constraintEnd_toStartOf="@+id/textViewMaxCount"
+        app:layout_constraintTop_toTopOf="@+id/textViewMaxCount"
+        app:srcCompat="@drawable/ic_left_black_24dp" />
+
+    <ImageButton
+        android:id="@+id/imageButtonIncrease"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/imageButtonDecrease"
+        app:layout_constraintStart_toEndOf="@+id/textViewMaxCount"
+        app:layout_constraintTop_toTopOf="@+id/imageButtonDecrease"
+        app:srcCompat="@drawable/ic_right_black_24dp" />
+
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>

@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +15,36 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+
+import team1.mobileapp.com.model.ChatRoom;
+
 
 public class MainFragment extends Fragment {
+
+    private FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference mDatabaseReference = mFirebaseDatabase.getReference();
+
     private static final String ARG_PAGE = "page";
 
+    private RecyclerView recyclerViewMain;
+    private TextView emptyView;
+    private RecyclerView.Adapter adapterMain;
+    private RecyclerView.LayoutManager layoutManagerMain;
+
+    private static ArrayList<ChatRoom> mChatRooms = new ArrayList<>();
+    private static ArrayList<ChatRoom> chatRooms = new ArrayList<>();
+    private ChatRoom chatRoom;
+    private static ArrayList<String> mChatRoomsKeys = new ArrayList<>();
+
+    Bundle bundle;
+    private String mKey;
     private int page;
 
     public MainFragment() {
@@ -37,20 +66,149 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        RecyclerView recyclerViewMain = rootView.findViewById(R.id.recyclerViewMain);
+        page = getArguments().getInt(ARG_PAGE);
+        mKey = getArguments().getString("my_key");
+        bundle = getArguments();
+
+        recyclerViewMain = rootView.findViewById(R.id.recyclerViewMain);
+        emptyView = rootView.findViewById(R.id.emptyView);
+
+        if (chatRooms.isEmpty()) {
+            recyclerViewMain.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerViewMain.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+
+        recyclerViewMain.setHasFixedSize(true);
+        layoutManagerMain = new LinearLayoutManager(getActivity());
+        recyclerViewMain.setLayoutManager(layoutManagerMain);
+
         Button buttonBottom = rootView.findViewById(R.id.buttonBottom);
 
-        int page = getArguments().getInt(ARG_PAGE);
-        if(page==1){//내채팅방목록
-            buttonBottom.setText("채팅방 만들기");
+        if (page == 1) {//내채팅방목록
+
+            adapterMain = new MainAdapter(bundle, mKey, mChatRooms, page);
+            recyclerViewMain.setAdapter(adapterMain);
+            recyclerViewMain.setItemAnimator(new DefaultItemAnimator());
+
+            mDatabaseReference.child("users").child(mKey).child("myChatRooms").orderByValue().startAt(1).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    mChatRooms.clear();
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            mDatabaseReference.child("chatRooms").child(postSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    chatRoom = dataSnapshot.getValue(ChatRoom.class);
+                                    mChatRooms.add(chatRoom);
+                                    adapterMain.notifyDataSetChanged();
+                                    if (mChatRooms.isEmpty()) {
+                                        recyclerViewMain.setVisibility(View.GONE);
+                                        emptyView.setVisibility(View.VISIBLE);
+                                    }
+                                    else {
+                                        recyclerViewMain.setVisibility(View.VISIBLE);
+                                        emptyView.setVisibility(View.GONE);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }else{
+                        recyclerViewMain.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            buttonBottom.setText(getString(R.string.open_chat_create));
             buttonBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     directCreateActivity(getArguments());
                 }
             });
-        }else{//채팅방둘러보기
-            buttonBottom.setText("채팅방 둘러보기");
+        } else {//채팅방둘러보기
+            adapterMain = new MainAdapter(bundle, mKey, chatRooms, page);
+            recyclerViewMain.setAdapter(adapterMain);
+            recyclerViewMain.setItemAnimator(new DefaultItemAnimator());
+
+            mDatabaseReference.child("users").child(mKey).child("myChatRooms").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    mChatRoomsKeys.clear();
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        mChatRoomsKeys.add(postSnapshot.getKey());
+                    }
+
+                    mDatabaseReference.child("chatRooms").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if(dataSnapshot.exists()){
+                                chatRooms.clear();
+                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                                    boolean isMyRoom = false;
+                                    for(String mChatRoomKey : mChatRoomsKeys){
+                                        if(postSnapshot.child("key").getValue().equals(mChatRoomKey)){
+                                            isMyRoom = true;
+                                            mChatRoomsKeys.remove(mChatRoomKey);
+                                            break;
+                                        }
+                                    }
+                                    if(!isMyRoom){
+                                        chatRoom = postSnapshot.getValue(ChatRoom.class);
+                                        chatRooms.add(chatRoom);
+                                        adapterMain.notifyDataSetChanged();
+                                        if (chatRooms.isEmpty()) {
+                                            recyclerViewMain.setVisibility(View.GONE);
+                                            emptyView.setVisibility(View.VISIBLE);
+                                        }
+                                        else {
+                                            recyclerViewMain.setVisibility(View.VISIBLE);
+                                            emptyView.setVisibility(View.GONE);
+                                        }
+                                    }
+
+
+                                }
+
+
+
+                            }else{
+                                recyclerViewMain.setVisibility(View.GONE);
+                                emptyView.setVisibility(View.VISIBLE);
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+            buttonBottom.setText(getString(R.string.open_chat_search));
             buttonBottom.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
