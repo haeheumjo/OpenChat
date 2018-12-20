@@ -16,7 +16,7 @@ public class ChatRoom {
 
     }
 
-    public ChatRoom(String key, String name, String description, int optionName, int optionMaxCount, int optionAge, int optionSex, int optionStudentNumber, int optionDepartment){
+    public ChatRoom(String key, String name, String description, int optionMaxCount, int optionName,  int optionAge, int optionSex, int optionStudentNumber, int optionDepartment){
         this.key = key;
         this.name = name;
         this.description = description;

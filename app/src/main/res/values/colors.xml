@@ -9,4 +9,8 @@
     <color name="black">#000000</color>
     <color name="knu_red">#D80C18</color>
     <color name="knu_purple">#BAB3D1</color>
+    <color name="mustard">#EEB729</color>
+    <color name="ivory">#F3E7C3</color>
+    <color name="darkGrey">#747474</color>
+    <color name="grey">#BBBBBB</color>
 </resources>

@@ -11,6 +11,9 @@
         <item>쑥쓰러운</item>
         <item>뽀얀</item>
         <item>볼빨간</item>
+        <item>가을타는</item>
+        <item>초라한</item>
+        <item>사춘기</item>
         <item>멋진</item>
         <item>돈많은</item>
         <item>숙련된</item>
@@ -26,6 +29,7 @@
         <item>날카로운</item>
         <item>성스러운</item>
         <item>오니짱의</item>
+        <item>불혹의</item>
         <item>너만의</item>
         <item>나만의</item>
         <item>우리의</item>
@@ -79,6 +83,10 @@
         <item>예비</item>
         <item>평생</item>
         <item>쾌변하는</item>
+        <item>던지는</item>
+        <item>준비된</item>
+        <item>멀리보는</item>
+        <item>뜻깊은</item>
     </string-array>
 
     <string-array name="name_second">
@@ -104,7 +112,7 @@
         <item>부족장</item>
         <item>경대남</item>
         <item>경대녀</item>
-        <item>사장님</item>
+        <item>사장</item>
         <item>공익</item>
         <item>미필</item>
         <item>군필</item>

@@ -47,6 +47,8 @@ public class MainFragment extends Fragment {
     private String mKey;
     private int page;
 
+    ValueEventListener valueEventListener;
+
     public MainFragment() {
         // Required empty public constructor
     }
@@ -98,20 +100,23 @@ public class MainFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     mChatRooms.clear();
                     if (dataSnapshot.exists()) {
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        for (final DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                             mDatabaseReference.child("chatRooms").child(postSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                    chatRoom = dataSnapshot.getValue(ChatRoom.class);
-                                    mChatRooms.add(chatRoom);
-                                    adapterMain.notifyDataSetChanged();
-                                    if (mChatRooms.isEmpty()) {
-                                        recyclerViewMain.setVisibility(View.GONE);
-                                        emptyView.setVisibility(View.VISIBLE);
-                                    }
-                                    else {
-                                        recyclerViewMain.setVisibility(View.VISIBLE);
-                                        emptyView.setVisibility(View.GONE);
+                                    if(dataSnapshot.exists()){
+                                        chatRoom = dataSnapshot.getValue(ChatRoom.class);
+                                        mChatRooms.add(chatRoom);
+                                        adapterMain.notifyDataSetChanged();
+                                        if (mChatRooms.isEmpty()) {
+                                            recyclerViewMain.setVisibility(View.GONE);
+                                            emptyView.setVisibility(View.VISIBLE);
+                                        } else {
+                                            recyclerViewMain.setVisibility(View.VISIBLE);
+                                            emptyView.setVisibility(View.GONE);
+                                        }
+                                    }else{
+                                        mDatabaseReference.child("users").child(mKey).child("myChatRooms").child(postSnapshot.getKey()).removeValue();
                                     }
                                 }
 
@@ -121,7 +126,7 @@ public class MainFragment extends Fragment {
                                 }
                             });
                         }
-                    }else{
+                    } else {
                         recyclerViewMain.setVisibility(View.GONE);
                         emptyView.setVisibility(View.VISIBLE);
                     }
@@ -145,6 +150,47 @@ public class MainFragment extends Fragment {
             recyclerViewMain.setAdapter(adapterMain);
             recyclerViewMain.setItemAnimator(new DefaultItemAnimator());
 
+            valueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        chatRooms.clear();
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+
+                            boolean isMyRoom = false;
+                            for (String mChatRoomKey : mChatRoomsKeys) {
+                                if (postSnapshot.child("key").getValue().equals(mChatRoomKey)) {
+                                    isMyRoom = true;
+                                    break;
+                                }
+                            }
+                            if (!isMyRoom) {
+                                chatRoom = postSnapshot.getValue(ChatRoom.class);
+                                chatRooms.add(chatRoom);
+                                adapterMain.notifyItemInserted(chatRooms.size()-1);
+                            }
+                        }
+                        if (chatRooms.isEmpty()) {
+                            recyclerViewMain.setVisibility(View.GONE);
+                            emptyView.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerViewMain.setVisibility(View.VISIBLE);
+                            emptyView.setVisibility(View.GONE);
+                        }
+
+                    } else {
+                        recyclerViewMain.setVisibility(View.GONE);
+                        emptyView.setVisibility(View.VISIBLE);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            };
+
             mDatabaseReference.child("users").child(mKey).child("myChatRooms").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -152,61 +198,15 @@ public class MainFragment extends Fragment {
                     for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                         mChatRoomsKeys.add(postSnapshot.getKey());
                     }
-
-                    mDatabaseReference.child("chatRooms").addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()){
-                                chatRooms.clear();
-                                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-                                    boolean isMyRoom = false;
-                                    for(String mChatRoomKey : mChatRoomsKeys){
-                                        if(postSnapshot.child("key").getValue().equals(mChatRoomKey)){
-                                            isMyRoom = true;
-                                            mChatRoomsKeys.remove(mChatRoomKey);
-                                            break;
-                                        }
-                                    }
-                                    if(!isMyRoom){
-                                        chatRoom = postSnapshot.getValue(ChatRoom.class);
-                                        chatRooms.add(chatRoom);
-                                        adapterMain.notifyDataSetChanged();
-                                        if (chatRooms.isEmpty()) {
-                                            recyclerViewMain.setVisibility(View.GONE);
-                                            emptyView.setVisibility(View.VISIBLE);
-                                        }
-                                        else {
-                                            recyclerViewMain.setVisibility(View.VISIBLE);
-                                            emptyView.setVisibility(View.GONE);
-                                        }
-                                    }
-
-
-                                }
-
-
-
-                            }else{
-                                recyclerViewMain.setVisibility(View.GONE);
-                                emptyView.setVisibility(View.VISIBLE);
-                            }
-
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                        }
-                    });
+                    mDatabaseReference.child("chatRooms").addListenerForSingleValueEvent(valueEventListener);
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
                 }
             });
-
-
+            mDatabaseReference.child("chatRooms").addValueEventListener(valueEventListener);
 
             buttonBottom.setText(getString(R.string.open_chat_search));
             buttonBottom.setOnClickListener(new View.OnClickListener() {
@@ -216,8 +216,10 @@ public class MainFragment extends Fragment {
                 }
             });
         }
+
         return rootView;
     }
+
 
     private void directCreateActivity(Bundle bundle) {
         Intent intent = new Intent(getActivity(), CreateActivity.class);

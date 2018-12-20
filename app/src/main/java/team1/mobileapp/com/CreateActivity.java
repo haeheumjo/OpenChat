@@ -50,9 +50,9 @@ public class CreateActivity extends AppCompatActivity {
     public final int CHATROOM_STATUS_ALERT = 1;
     public final int CHATROOM_STATUS_BANNED = 0;
 
-    public final int POSITION_MASTER = 2;
-    public final int POSITION_MANAGER = 1;
-    public final int POSITION_MEMBER = 0;
+    private final int POSITION_MASTER = 0;
+    private final int POSITION_MANAGER = 1;
+    private final int POSITION_MEMBER = 2;
 
     private final int PERMISSION_READ_STORAGE = 1;
     private final int PICK_IMAGE = 1;
@@ -221,6 +221,7 @@ public class CreateActivity extends AppCompatActivity {
         buttonCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                buttonCreate.setEnabled(false);
                 attemptCreate();
             }
         });
@@ -262,6 +263,7 @@ public class CreateActivity extends AppCompatActivity {
         }
         if (cancel) {
             focusView.requestFocus();
+            buttonCreate.setEnabled(true);
         } else {
 
             optionMaxCount = Integer.parseInt(textViewMaxCount.getText().toString());
@@ -287,6 +289,7 @@ public class CreateActivity extends AppCompatActivity {
                                         uploadImage();
                                     }else{
                                         finish();
+                                        buttonCreate.setEnabled(true);
                                     }
                                 }
                             });
@@ -363,6 +366,7 @@ public class CreateActivity extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         dialog.dismiss();
                         finish();
+                        buttonCreate.setEnabled(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -372,6 +376,8 @@ public class CreateActivity extends AppCompatActivity {
                         mDatabaseReference.child("chatRooms").child(roomKey).removeValue();
                         mDatabaseReference.child("users").child(studentNumber).child("myChatRooms").child(roomKey).removeValue();
                         dialog.dismiss();
+                        Toast.makeText(getApplicationContext(),getString(R.string.upload_fail),Toast.LENGTH_LONG).show();
+                        buttonCreate.setEnabled(true);
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
